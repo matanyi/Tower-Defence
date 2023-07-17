@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class EnterYourName : MonoBehaviour
 {
-    public InputField player_name;
+    public Text player_name;
     public string name_transfer;
     public void GetName()
     {

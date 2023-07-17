@@ -6,9 +6,12 @@ using UnityEngine.UI;
 public class UpdateScoreboard : MonoBehaviour
 {
     public Text textElement;
-    void Start()
+    void Update()
     {
-        string textValue = PlayerPrefs.GetString("SavedScores");
-        textElement.text = textValue;
+        if (PlayerPrefs.GetString("SavedScores") != null)
+        {
+            string textValue = PlayerPrefs.GetString("SavedScores");
+            textElement.text = textValue;
+        }
     }
 }

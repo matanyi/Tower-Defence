@@ -1,14 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class clicker : MonoBehaviour
+public class ScoreCounter : MonoBehaviour
 {
-    public Text textNum;
-    public int num = 0;
+    public Text Score;
 
-    public void addNum(int rate)
+    void Update()
     {
-        num += rate; 
-        textNum.text = "Score: " + num.ToString();
+        Score.text = "Score: " + MageManager.total_score;
     }
 }

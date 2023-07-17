@@ -1,29 +1,95 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyManager : MonoBehaviour
 {
     public Transform[] m_SpawnPoints;
-    public GameObject m_EnemyPrefab;
-    public float timeSpawn = 2f;
+    public GameObject Skeleton;
+    public GameObject Devil;
+    public GameObject Cyclops;
+    public GameObject Boss;
+    public static int wave;
+    public GameObject[] enemy;
+    public Text victory;
 
-    private float timer;
+    private int timeSpawn = 30;
+    private int[,] waves = new int[,] {
+        {2, 1, 1, 1, 1},
+        {2, 0, 1, 0, 0},
+        {3, 0, 0, 0, 0},
+        {3, 0, 0, 0, 0},
+        {3, 0, 0, 0, 0},
+        {3, 0, 0, 0, 0},
+        {2, 0, 0, 0, 0},
+        {2, 0, 0, 0, 0},
+        {2, 0, 0, 0, 0},
+        {3, 0, 0, 0, 0},
+    };
 
     void Start()
     {
-        timer = timeSpawn;
+        wave = 0;
     }
-    
-    private void Update()
+    void Update()
     {
-        timer -= Time.deltaTime;
-        if (timer <= 0)
+        enemy = GameObject.FindGameObjectsWithTag("Enemy");
+        if (enemy.Length == 0 && wave == 10)
         {
-            timer = timeSpawn;
-            Debug.Log("sadaddfad");
-            Instantiate(m_EnemyPrefab,m_SpawnPoints[0]);
-            Instantiate(m_EnemyPrefab, m_SpawnPoints[1]);
+            Victory();
         }
+
+    }
+    private void StartSpawn()
+    {
+        StartCoroutine(Spawning());
+    }
+    private IEnumerator Spawning()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            UpdateWave();
+            for (int j = 0; j < waves[i, 1]; j++)
+            {
+                SpawnEnemy(Skeleton);
+                yield return new WaitForSeconds(waves[i, 0]);
+            }
+            for (int j = 0; j < waves[i, 2]; j++)
+            {
+                SpawnEnemy(Devil);
+                yield return new WaitForSeconds(waves[i, 0]);
+            }
+            for (int j = 0; j < waves[i, 3]; j++)
+            {
+                SpawnEnemy(Cyclops);
+                yield return new WaitForSeconds(waves[i, 0]);
+            }
+            for (int j = 0; j < waves[i, 4]; j++)
+            {
+                Instantiate(Boss, m_SpawnPoints[Random.Range(0, 1)]);
+                yield return new WaitForSeconds(waves[i, 0]);
+            }
+            yield return new WaitForSeconds(timeSpawn);
+        }
+    }
+    void SpawnEnemy(GameObject Enemy)
+    {   
+        Instantiate(Enemy, m_SpawnPoints[0]);
+        Instantiate(Enemy, m_SpawnPoints[1]);
+    }
+    void UpdateWave()
+    {
+        wave++;
+    }
+    public void Victory()
+    {
+        Time.timeScale = 0;
+        enemy = GameObject.FindGameObjectsWithTag("Enemy");
+        for (int i = 0; i < enemy.Length; ++i)
+        {
+            Destroy(enemy[i]);
+        }
+        victory.gameObject.SetActive(true);
     }
 }
